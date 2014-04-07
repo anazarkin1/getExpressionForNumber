@@ -22,11 +22,11 @@
  */
 
 const GENE_SIZE = 4;
-const POPULATION_SIZE = 1000;
-const MAX_GENERATIONS =40;
+const POPULATION_SIZE = 100;
+const MAX_GENERATIONS =400;
 const MUTATION_RATE=0.01;
 const CROSSOVER_RATE = 0.7;
-const CHROMO_LENGTH=30*GENE_SIZE;
+const CHROMO_LENGTH=50*GENE_SIZE;
 
 //between 0 and 1
 function get_random_number (minimum, maximum) {
@@ -268,7 +268,7 @@ function solve(){
                     display(str);
 
                 foundTarget=true;
-                break;
+                return;
             }
 
             //Setting new closest values
