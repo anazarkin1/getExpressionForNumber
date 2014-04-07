@@ -22,11 +22,11 @@
  */
 
 const GENE_SIZE = 4;
-const POPULATION_SIZE = 200;
-const MAX_GENERATIONS =4000;
+const POPULATION_SIZE = 1000;
+const MAX_GENERATIONS =40;
 const MUTATION_RATE=0.01;
 const CROSSOVER_RATE = 0.7;
-const CHROMO_LENGTH=100*GENE_SIZE;
+const CHROMO_LENGTH=30*GENE_SIZE;
 
 //between 0 and 1
 function get_random_number (minimum, maximum) {
@@ -183,6 +183,8 @@ function getFitness(value, target){
 
 
 //Return random chromosome from population via roulette method
+//Also knows as Fitness proportionate selection
+
 function roulette(total_fitness, population){
     slice=get_random_number(0,total_fitness);
     fitness_sofar=0;
@@ -214,7 +216,7 @@ function mutate(bits){
                 bits[i] = '0';
             }
             else{
-                bits.at[i] = '1';
+                bits[i] = '1';
             }
         }
     }
@@ -224,18 +226,20 @@ function mutate(bits){
 
 function solve(){
     target=get_random_number(-10,10);
-    output_doc=document.getElementById("output");
-    closest_chromo="";
-    closest_chromo_fitness=0;
-    worst_chromo="";
-    worst_chromo_fitness=0;
-    //Array of populations
+    //populations
     ar_pops=[];
-    display("Target: "+target);
+
+    //
+    output_doc=document.getElementById("output");
+    //Array of populations
     //Populating array with random values and set fitness to 0
     for(i =0; i < POPULATION_SIZE; i++){
         ar_pops[i] = new Population(get_random_bits(CHROMO_LENGTH),0.00);
     }
+    closest_chromo=ar_pops[0].bits;
+    closest_chromo_fitness=ar_pops[0].fitness;
+    worst_chromo=ar_pops[0].bits;
+    worst_chromo_fitness=ar_pops[0].fitness;
 
     var foundTarget=false;
     var iterationCount=0;
@@ -257,7 +261,11 @@ function solve(){
             totalFitness+=ar_pops[i].fitness;
             // Found our target!
             if(ar_pops[i].fitness===9999){
-                output_doc.value=ar_pops[i].bits+" "+getDecodeChromo(ar_pops[i].bits)+"\nTOOK:"+iterationCount;
+                str="\nTARGET: "+target+
+                    "\nBITS:"+ar_pops[i].bits+
+                    "\nCHROME VALUE: "+getDecodeChromo(ar_pops[i].bits)+
+                    "\nITERATION: "+iterationCount;
+                    display(str);
 
                 foundTarget=true;
                 break;
@@ -301,9 +309,9 @@ function solve(){
    out_str ="Target: "+target+
         "\nClosest chromo: "+getDecodeChromo(closest_chromo)+
         "\nChromo Value: "+calculateChromoValue(getDecodeChromo(closest_chromo))+
+        "\nFitness Rate: "+closest_chromo_fitness+
         "\nWorst Chromo: "+getDecodeChromo(worst_chromo)+
         "\nWorst Value: "+calculateChromoValue(getDecodeChromo(worst_chromo))+
-        "\nFitness Rate: "+closest_chromo_fitness+
         "\nIterations: "+iterationCount;
         display(out_str);
 
